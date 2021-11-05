@@ -12,8 +12,8 @@ module.exports = async (req, res) => {
 
 const tablePrice = async (request) => {
     let sender = nodemailer.createTransport({
-        host:"smtp-mail.outlook.com",
-        service:"smtp-mail.outlook.com",
+        host:"smtp.gmail.com",
+        service:"smtp.gmail.com",
         port:587,
         segure:true,
         auth:{
