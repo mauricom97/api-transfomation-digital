@@ -1,31 +1,38 @@
+const models = require("../../app/models")
 const nodemailer = require("nodemailer")
-
+const { v4: uuidv4 } = require('uuid');
 module.exports = async (req, res) => {
     try {
         const requestData = extractData(req)
-        await analyseData(res, requestData)
-        await tablePrice(requestData)
+        //await analyseData(requestData)
+        const client = await createClient(requestData)
+        //await email(requestData)
+        res.send(client)
+        
     } catch (error) {
         console.log(error)
     }
 }
 
-extractData = (request) =>{
-    const { name, plain, email, phone, description } = request.body
-    return { name, plain, email, phone, description }
+extractData = (request) => {
+    const { name, cpf_cnpj, phone, birth_date, active, email } = request.body
+    return { uuid: uuidv4(), name, cpf_cnpj, phone, birth_date, active, email }
 }
 
-analyseData = async (res, request) => {
-    if(request.name && request.plain && request.email && request.phone){
-        res.status(200)
-        res.send({response: "E-mail enviado com sucesso."})
-    }else{
-        res.status(400)
-        res.send({response: "error"})
+analyseData = async (request) => {
+    return request
+}
+
+createClient = async (request) => {
+    try {
+        const client = await models.Client.create(request)
+        return client
+    } catch (error) {
+        console.log(error)
     }
 }
 
-tablePrice = async (request) => {
+email = async (request) => {
     let sender = nodemailer.createTransport({
         host:"smtp.gmail.com",
         service:"smtp.gmail.com",
@@ -47,13 +54,10 @@ tablePrice = async (request) => {
     const success = sender.sendMail(emailSend, (error) => {
         if (error) {
             console.log(error)
-            return { success: false, error: error}
+            return success
         } else {
             console.log(emailSend)
-            return { success: true, email: emailSend }
+            return 
         }
         });
-
-    return success
-
 }
