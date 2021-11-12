@@ -4,13 +4,18 @@ const { v4: uuidv4 } = require('uuid');
 module.exports = async (req, res) => {
     try {
         const requestData = extractData(req)
-        //await analyseData(requestData)
+        await analyseData(requestData)
         const client = await createClient(requestData)
-        //await email(requestData)
-        res.send(client)
+        res.send({response:{
+            "success":client
+        }})
         
     } catch (error) {
         console.log(error)
+        res.status(400)
+        res.send({response:{
+            "error":error.message
+        }})
     }
 }
 
@@ -20,7 +25,16 @@ extractData = (request) => {
 }
 
 analyseData = async (request) => {
-    return request
+    const client = await models.Client.findOne({
+        where:{
+            cpf_cnpj: request.cpf_cnpj
+        }
+    })
+    if(client){
+        throw Error('Cliente já cadastrado!')
+    }else{
+        return request
+    }
 }
 
 createClient = async (request) => {

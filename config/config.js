@@ -1,7 +1,7 @@
 module.exports = {
-  username: 'peralta',
-  password: 'Tesla08011942',
+  username: 'mauricio',
+  password: '123',
   database: 'tranformation',
-  host: '192.168.2.45',
+  host: '10.199.10.75',
   dialect: 'mysql',
 }
