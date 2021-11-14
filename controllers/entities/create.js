@@ -5,42 +5,42 @@ module.exports = async (req, res) => {
     try {
         const requestData = extractData(req)
         await analyseData(requestData)
-        const client = await createClient(requestData)
-        res.send({response:{
-            "success":client
+        const entity = await createEntity(requestData)
+        return res.send({response:{
+            "success":entity
         }})
         
     } catch (error) {
         console.log(error)
         res.status(400)
-        res.send({response:{
+        return res.send({response:{
             "error":error.message
         }})
     }
 }
 
 extractData = (request) => {
-    const { name, cpf_cnpj, phone, birth_date, active, email } = request.body
-    return { uuid: uuidv4(), name, cpf_cnpj, phone, birth_date, active, email }
+    const { fantasy_name, corporate_name, cep, address, state, city, cpf_cnpj, phone, email } = request.body
+    return { uuid: uuidv4(), cpf_cnpj, fantasy_name, corporate_name, cep, address, state, city, phone, email }
 }
 
 analyseData = async (request) => {
-    const client = await models.Client.findOne({
+    const entity = await models.Entity.findOne({
         where:{
             cpf_cnpj: request.cpf_cnpj
         }
     })
-    if(client){
-        throw Error('Cliente já cadastrado!')
+    if(entity){
+        throw Error('Entidade já cadastrada!')
     }else{
         return request
     }
 }
 
-createClient = async (request) => {
+createEntity = async (request) => {
     try {
-        const client = await models.Client.create(request)
-        return client
+        const entity = await models.Entity.create(request)
+        return entity
     } catch (error) {
         console.log(error)
     }
