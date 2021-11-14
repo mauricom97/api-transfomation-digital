@@ -1,7 +1,7 @@
 module.exports = {
-  username: 'mauricio',
-  password: '123',
-  database: 'tranformation',
-  host: '10.199.10.75',
+  username: 'sincroniza',
+  password: 'Tesla08011942',
+  database: 'sincroniza',
+  host: 'sincroniza.mysql.dbaas.com.br',
   dialect: 'mysql',
 }
