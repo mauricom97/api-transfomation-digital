@@ -1,0 +1,88 @@
+-- MySQL Workbench Synchronization
+-- Generated: 2021-11-13 18:48
+-- Model: New Model
+-- Version: 1.0
+-- Project: Name of the project
+-- Author: user09
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+CREATE SCHEMA IF NOT EXISTS `sincroniza` DEFAULT CHARACTER SET utf8 ;
+
+CREATE TABLE IF NOT EXISTS `sincroniza`.`entities` (
+  `uuid` VARCHAR(45) NOT NULL,
+  `fantasy_name` VARCHAR(45) NULL DEFAULT NULL,
+  `corporate_name` VARCHAR(100) NULL DEFAULT NULL,
+  `cep` VARCHAR(45) NULL DEFAULT NULL,
+  `address` VARCHAR(100) NULL DEFAULT NULL,
+  `state` VARCHAR(45) NULL DEFAULT NULL,
+  `city` VARCHAR(45) NULL DEFAULT NULL,
+  `cpf_cnpj` VARCHAR(45) NULL DEFAULT NULL,
+  `phone` VARCHAR(45) NULL DEFAULT NULL,
+  `email` VARCHAR(45) NULL DEFAULT NULL,
+  `createdAt` DATE NULL DEFAULT NULL,
+  `updatedAt` DATE NULL DEFAULT NULL,
+  PRIMARY KEY (`uuid`),
+  UNIQUE INDEX `fantasy_name_UNIQUE` (`fantasy_name` ASC),
+  UNIQUE INDEX `corporate_name_UNIQUE` (`corporate_name` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = ascii;
+
+CREATE TABLE IF NOT EXISTS `sincroniza`.`clients` (
+  `uuid` VARCHAR(45) NOT NULL,
+  `uuid_entity` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`uuid`),
+  UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC),
+  INDEX `fk_entity_client_idx` (`uuid_entity` ASC),
+  CONSTRAINT `fk_entity_client`
+    FOREIGN KEY (`uuid_entity`)
+    REFERENCES `sincroniza`.`entities` (`uuid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sincroniza`.`contracts` (
+  `uuid` VARCHAR(45) NOT NULL,
+  `numContract` INT(11) NOT NULL,
+  `dtStart` DATE NOT NULL,
+  `dtEnd` DATE NULL DEFAULT NULL,
+  `price` DOUBLE NULL DEFAULT NULL,
+  `active` TINYINT(4) NOT NULL,
+  `contractscol` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`uuid`),
+  UNIQUE INDEX `numContrato_UNIQUE` (`numContract` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sincroniza`.`clients_contracts` (
+  `client_uuid` VARCHAR(45) NULL DEFAULT NULL,
+  `contract_uuid` VARCHAR(45) NULL DEFAULT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `sincroniza`.`clients_has_contracts` (
+  `clients_uuid` VARCHAR(45) NOT NULL,
+  `contracts_uuid` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`clients_uuid`, `contracts_uuid`),
+  INDEX `fk_clients_has_contracts_contracts1_idx` (`contracts_uuid` ASC),
+  INDEX `fk_clients_has_contracts_clients1_idx` (`clients_uuid` ASC),
+  CONSTRAINT `fk_clients_has_contracts_clients1`
+    FOREIGN KEY (`clients_uuid`)
+    REFERENCES `sincroniza`.`clients` (`uuid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_clients_has_contracts_contracts1`
+    FOREIGN KEY (`contracts_uuid`)
+    REFERENCES `sincroniza`.`contracts` (`uuid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         cpf_cnpj: DataTypes.STRING,
         phone: DataTypes.STRING,
         email: DataTypes.STRING,
+        company: DataTypes.BOOLEAN,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,
       },{
