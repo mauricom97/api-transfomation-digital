@@ -4,8 +4,12 @@ const { v4: uuidv4 } = require('uuid');
 module.exports = async (req, res) => {
     try {
         const requestData = extractData(req)
+        console.log(requestData)
         await analyseData(requestData)
         const entity = await createEntity(requestData)
+        if(requestData.type.client){
+            await createClient(entity.dataValues)
+        }
         return res.send({response:{
             "success":entity
         }})
@@ -19,12 +23,12 @@ module.exports = async (req, res) => {
     }
 }
 
-extractData = (request) => {
-    const { fantasy_name, corporate_name, cep, address, state, city, cpf_cnpj, phone, email } = request.body
-    return { uuid: uuidv4(), cpf_cnpj, fantasy_name, corporate_name, cep, address, state, city, phone, email }
+function extractData (request) {
+    const { fantasy_name, corporate_name, cep, address, state, city, cpf_cnpj, phone, email, type, company } = request.body
+    return { uuid: uuidv4(), cpf_cnpj, fantasy_name, corporate_name, cep, address, state, city, phone, email, type, company }
 }
 
-analyseData = async (request) => {
+async function analyseData (request) {
     const entity = await models.Entity.findOne({
         where:{
             cpf_cnpj: request.cpf_cnpj
@@ -32,12 +36,10 @@ analyseData = async (request) => {
     })
     if(entity){
         throw Error('Entidade já cadastrada!')
-    }else{
-        return request
     }
 }
 
-createEntity = async (request) => {
+async function createEntity (request) {
     try {
         const entity = await models.Entity.create(request)
         return entity
@@ -46,32 +48,10 @@ createEntity = async (request) => {
     }
 }
 
-email = async (request) => {
-    let sender = nodemailer.createTransport({
-        host:"smtp.gmail.com",
-        service:"smtp.gmail.com",
-        port:587,
-        segure:true,
-        auth:{
-            user:"mauricionunesdasilvanunes@gmail.com",
-            pass:"Tesla08011942"
-        }
-    })
-    
-    let emailSend = {
-        from: "mauricionunesdasilvanunes@gmail.com",
-        to: request.email,
-        subject: request.plain,
-        text: request.description
+async function createClient(request) {
+    try {
+        await models.Clients.create({"entity_uuid":request.uuid})
+    } catch (error) {
+        console.log(error)
     }
-
-    const success = sender.sendMail(emailSend, (error) => {
-        if (error) {
-            console.log(error)
-            return success
-        } else {
-            console.log(emailSend)
-            return 
-        }
-        });
 }
