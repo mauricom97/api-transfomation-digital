@@ -2,6 +2,7 @@ const models = require("../../app/models")
 
 module.exports = async (req, res) => {
     try {
+        console.log(req.params)
         const requestData = await analyseData(req)
         const entity = await updateEntity(requestData)
         return res.send({response:{
