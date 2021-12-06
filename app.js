@@ -33,5 +33,5 @@ require("./routers")(app)
 app.use(cors())
 
 app.listen( port, () => {
-    console.log(`APP in port ${port}`)
+    console.log(`App in port running ${port}`)
 })

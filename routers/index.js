@@ -1,5 +1,7 @@
+const session = require('express-session')
 const entities = require("./entity")
 const contracts = require("./contract")
+const users = require("./user")
 
 module.exports = (app) => {
     app.get("/status", (req, res) => {
@@ -7,4 +9,5 @@ module.exports = (app) => {
     })
     app.use("/entities", entities)
     app.use("/contracts", contracts)
+    app.use("/users", users)
 }
