@@ -2,13 +2,14 @@ const models = require("../../app/models")
 
 module.exports = async (req, res) => {
     try {
-        const entity = await models.Entity.findAll({
-            order: [
-                ["fantasy_name", "ASC"]
-            ]
+        const client = await models.Clients.findAll({
+            include:[{
+                model: models.Entity, as: "entity_uuid",
+                require: true
+            }]
         })
         return res.send({response:{
-            "success":entity
+            "success":client
         }})
     } catch (error) {
         console.log(error)

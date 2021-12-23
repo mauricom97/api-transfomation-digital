@@ -10,5 +10,6 @@ module.exports = (sequelize, DataTypes) => {
         tableName: 'clients',
         timestamps: false
     })
+
     return clients
 }
