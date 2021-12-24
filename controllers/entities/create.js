@@ -36,6 +36,8 @@ async function analyseData (request) {
     })
     if(entity){
         throw Error('Entidade já cadastrada!')
+    }else if(!request.cpf_cnpj){
+        throw Error('Formulario de entidade preenchido incorretamente')
     }
 }
 
